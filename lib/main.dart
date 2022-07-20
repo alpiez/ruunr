@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/ruunr_icons.dart';
 import 'package:ruunr/screens/home_screen.dart';
+import 'package:ruunr/screens/monthly_runs_detail_screen.dart';
 import 'package:ruunr/screens/runs_data_detail_screen.dart';
 import 'package:ruunr/screens/runs_edit_screen.dart';
 import 'package:ruunr/screens/runs_all_screen.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
         routes: {
           SaveStopwatchScreen.routeName: (context) => SaveStopwatchScreen(),
           RunDataDetailScreen.routeName: (context) => RunDataDetailScreen(),
+          MonthlyRunDetailScreen.routeName: (context) => MonthlyRunDetailScreen(),
           EditRunsScreen.routeName: (context) => EditRunsScreen(),
           RunsScreen.routeName: (context) => RunsScreen(),
           MainScreen.routeName: (context) => MainScreen(),
