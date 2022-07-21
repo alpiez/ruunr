@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ruunr/all_runs.dart';
@@ -69,6 +70,8 @@ class _SaveStopwatchScreenState extends State<SaveStopwatchScreen> {
       if (isValid) {
         formKey.currentState!.save();
         runs.add(Runs(location: loc, dateTime: DateTime.now(), distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps));
+        FirebaseFirestore.instance.collection("runs").add({"location": loc, "dateTime": DateFormat.yMMMMd().format(DateTime.now()), "distance": totalMeter, "duration": Duration(hours: hours, minutes: minutes, seconds: seconds).inSeconds, "meterPerLap": meterPerLap, "note": note, "laps": Laps.encode(laps)});
+        // FirebaseFirestore.instance.collection("your mom").add({"what":"your dad"});
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Run saved successfully!")));
       }

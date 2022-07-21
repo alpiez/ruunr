@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ruunr/all_runs.dart';
@@ -22,57 +23,45 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AllRunsData>(create: (context) { return AllRunsData(); } )
-      ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
-          // primarySwatch: Colors.blue,
-          primarySwatch: const MaterialColor(0xff343A40, <int, Color>{
-            50: Color(0xffF8F9FA),
-            100: Color(0xffE9ECEF),
-            200: Color(0xffDEE2E6),
-            300: Color(0xffCED4DA),
-            400: Color(0xffADB5BD),
-            500: Color(0xff6C757D),
-            600: Color(0xff343A40),
-            700: Color(0xff212529)
-          }),
-          fontFamily: "Poppins",
-          scaffoldBackgroundColor: const Color(0xff212529),
-          colorScheme: const ColorScheme.dark(primary: Color(0xffF8F9FA), secondary: Color(0xffE9ECEF)), //Set text to white
-          appBarTheme: const AppBarTheme(backgroundColor: Color(0xff212529), elevation: 0, toolbarHeight: 80, titleTextStyle: TextStyle(fontSize: 48, fontWeight: FontWeight.w700, fontFamily: "Poppins", color: Color(0xff6C757D))) //set appbar color and remove shadow (elevation)
+    return FutureBuilder(
+      future: Firebase.initializeApp(),
+      builder: (ctx, snapshot) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AllRunsData>(create: (context) { return AllRunsData(); } )
+        ],
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: const MaterialColor(0xff343A40, <int, Color>{
+              50: Color(0xffF8F9FA),
+              100: Color(0xffE9ECEF),
+              200: Color(0xffDEE2E6),
+              300: Color(0xffCED4DA),
+              400: Color(0xffADB5BD),
+              500: Color(0xff6C757D),
+              600: Color(0xff343A40),
+              700: Color(0xff212529)
+            }),
+            fontFamily: "Poppins",
+            scaffoldBackgroundColor: const Color(0xff212529),
+            colorScheme: const ColorScheme.dark(primary: Color(0xffF8F9FA), secondary: Color(0xffE9ECEF)), //Set text to white
+            appBarTheme: const AppBarTheme(backgroundColor: Color(0xff212529), elevation: 0, toolbarHeight: 80, titleTextStyle: TextStyle(fontSize: 48, fontWeight: FontWeight.w700, fontFamily: "Poppins", color: Color(0xff6C757D))) //set appbar color and remove shadow (elevation)
+          ),
+          home: MainScreen(),
+          routes: {
+            SaveStopwatchScreen.routeName: (context) => SaveStopwatchScreen(),
+            RunDataDetailScreen.routeName: (context) => RunDataDetailScreen(),
+            MonthlyRunDetailScreen.routeName: (context) => MonthlyRunDetailScreen(),
+            EditRunsScreen.routeName: (context) => EditRunsScreen(),
+            RunsScreen.routeName: (context) => RunsScreen(),
+            MainScreen.routeName: (context) => MainScreen(),
+      
+            // HomeScreen.routeName: (context) => HomeScreen(),
+            // StopwatchScreen.routeName: (context) => StopwatchScreen(),
+            // StatsScreen.routeName: (context) => StatsScreen(),
+            // SettingsScreen.routeName: (context) => SettingsScreen(),
+          },
         ),
-        // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        home: MainScreen(),
-        // home: Scaffold(
-        //   body: MainScreen(),
-        //   bottomNavigationBar: NaviBar(),
-        // ),
-        routes: {
-          SaveStopwatchScreen.routeName: (context) => SaveStopwatchScreen(),
-          RunDataDetailScreen.routeName: (context) => RunDataDetailScreen(),
-          MonthlyRunDetailScreen.routeName: (context) => MonthlyRunDetailScreen(),
-          EditRunsScreen.routeName: (context) => EditRunsScreen(),
-          RunsScreen.routeName: (context) => RunsScreen(),
-          MainScreen.routeName: (context) => MainScreen(),
-    
-          // HomeScreen.routeName: (context) => HomeScreen(),
-          // StopwatchScreen.routeName: (context) => StopwatchScreen(),
-          // StatsScreen.routeName: (context) => StatsScreen(),
-          // SettingsScreen.routeName: (context) => SettingsScreen(),
-        },
       ),
     );
   }
