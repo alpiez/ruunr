@@ -167,7 +167,6 @@ class AllRunsData extends ChangeNotifier{
         months.add(i);
       }
     }
-    print(months);
     return months;
   }
   

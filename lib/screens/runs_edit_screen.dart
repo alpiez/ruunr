@@ -69,7 +69,6 @@ class _EditRunsScreenState extends State<EditRunsScreen> {
     void calculateDistance() {
       totalMeter = meterPerLap * laps.length;
       totalKm = totalMeter / 1000;
-      print(totalKm);
     }
 
     String calculatePace(int totalSeconds, double distance) {

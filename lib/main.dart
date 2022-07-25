@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,23 +10,38 @@ import 'package:ruunr/screens/runs_data_detail_screen.dart';
 import 'package:ruunr/screens/runs_edit_screen.dart';
 import 'package:ruunr/screens/runs_all_screen.dart';
 import 'package:ruunr/screens/settings_screen.dart';
+import 'package:ruunr/screens/signin_screen.dart';
 import 'package:ruunr/screens/stats_screen.dart';
 import 'package:ruunr/screens/stopwatch_save_screen.dart';
 import 'package:ruunr/screens/stopwatch_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    bool isLoggedIn = false;
+
+    initializeFirebase() async {
+      // await Firebase.initializeApp();
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user == null){
+          isLoggedIn = false;
+        } else {
+          isLoggedIn = true;
+        }
+      });
+    }
+
     return FutureBuilder(
-      future: Firebase.initializeApp(),
-      builder: (ctx, snapshot) => MultiProvider(
+      future: initializeFirebase(),
+      builder: (context, snapshot) => MultiProvider(
         providers: [
           ChangeNotifierProvider<AllRunsData>(create: (context) { return AllRunsData(); } )
         ],
@@ -47,8 +63,13 @@ class MyApp extends StatelessWidget {
             colorScheme: const ColorScheme.dark(primary: Color(0xffF8F9FA), secondary: Color(0xffE9ECEF)), //Set text to white
             appBarTheme: const AppBarTheme(backgroundColor: Color(0xff212529), elevation: 0, toolbarHeight: 80, titleTextStyle: TextStyle(fontSize: 48, fontWeight: FontWeight.w700, fontFamily: "Poppins", color: Color(0xff6C757D))) //set appbar color and remove shadow (elevation)
           ),
-          home: MainScreen(),
+          // home: MainScreen(),
+          home: isLoggedIn ? MainScreen() : SignInScreen(),
           routes: {
+            SignInScreen.routeName: (context) => SignInScreen(),
+            SignUpScreen.routeName: (context) => SignUpScreen(),
+            LogInScreen.routeName: (context) => LogInScreen(),
+            
             SaveStopwatchScreen.routeName: (context) => SaveStopwatchScreen(),
             RunDataDetailScreen.routeName: (context) => RunDataDetailScreen(),
             MonthlyRunDetailScreen.routeName: (context) => MonthlyRunDetailScreen(),

@@ -71,7 +71,6 @@ class _SaveStopwatchScreenState extends State<SaveStopwatchScreen> {
         formKey.currentState!.save();
         runs.add(Runs(location: loc, dateTime: DateTime.now(), distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps));
         FirebaseFirestore.instance.collection("runs").add({"location": loc, "dateTime": DateFormat.yMMMMd().format(DateTime.now()), "distance": totalMeter, "duration": Duration(hours: hours, minutes: minutes, seconds: seconds).inSeconds, "meterPerLap": meterPerLap, "note": note, "laps": Laps.encode(laps)});
-        // FirebaseFirestore.instance.collection("your mom").add({"what":"your dad"});
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Run saved successfully!")));
       }
