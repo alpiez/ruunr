@@ -79,9 +79,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
       //https://firebase.google.com/docs/auth/flutter/password-auth#create_a_password-based_account
       try {
         final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: userPw);
-        FirebaseFirestore.instance.collection("users").add({"name": name, "email": email, "password": userPw, "account created": DateFormat.yMMMMd().format(DateTime.now())});
+        FirebaseFirestore.instance.collection("users").add({"name": name, "email": email, "password": userPw, "account created": DateFormat("d/M/y").add_jm().format(DateTime.now())});
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Account created successfully!")));
         setState(() { isLoading = false; });
+        Navigator.pushNamedAndRemoveUntil(context, MainScreen.routeName, (route) => false);
       } on FirebaseAuthException catch (e) {
         if (e.code == "weak-password") {
           setState(() { errorPw = "Weak Password!"; });
