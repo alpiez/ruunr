@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/models/runs.dart';
 import 'package:ruunr/screens/runs_data_detail_screen.dart';
+import 'package:ruunr/services/firestore_service.dart';
 
 class MiniRunDataWidget extends StatelessWidget {
   List<Runs> allRuns;
@@ -38,7 +39,7 @@ class MiniRunDataWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Consumer<AllRunsData>(builder: ((context, run, child) => Text((run.getDistance(i, true) / 1000).toStringAsFixed(1), style: const TextStyle(color: Color(0xffF8F9FA), fontSize: 48, fontWeight: FontWeight.bold, height: 1)))),
+                      Consumer<FirestoreService>(builder: ((context, run, child) => Text((run.getDistance(i, true) / 1000).toStringAsFixed(1), style: const TextStyle(color: Color(0xffF8F9FA), fontSize: 48, fontWeight: FontWeight.bold, height: 1)))),
                       const Text("km", style: TextStyle(color: Color(0xff6C757D), fontSize: 24, fontWeight: FontWeight.bold, height: 0.7)),
                     ],
                   ),
@@ -52,7 +53,7 @@ class MiniRunDataWidget extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Consumer<AllRunsData>(builder: ((context, run, child) => DurationAndPaceFormat(run.getDuration(i, true)))),
+                      Consumer<FirestoreService>(builder: ((context, run, child) => DurationAndPaceFormat(run.getDuration(i, true)))),
                       const SizedBox(width: 15), //spacing
                       SizedBox(
                         width: 60, height: 24,

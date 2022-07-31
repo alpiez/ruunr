@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/models/runs.dart';
 import 'package:ruunr/screens/monthly_runs_detail_screen.dart';
+import 'package:ruunr/services/firestore_service.dart';
 import 'package:ruunr/widgets/measurement_column.dart';
 
 class MiniMonthlyWidget extends StatelessWidget {
@@ -12,7 +13,7 @@ class MiniMonthlyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();
-    List<Runs> runsMonth = AllRunsData().getMonthlyDistance(today);
+    List<Runs> runsMonth = FirestoreService().getMonthlyDistance(today);
 
     double totalKmMonth() {
       double km = 0;

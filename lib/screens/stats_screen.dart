@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/models/runs.dart';
 import 'package:ruunr/screens/runs_all_screen.dart';
+import 'package:ruunr/services/firestore_service.dart';
 import 'package:ruunr/widgets/measurement_column.dart';
 import 'package:ruunr/widgets/runs_data_listview.dart';
 
@@ -16,7 +17,7 @@ class StatsScreen extends StatefulWidget {
 }
 
 class _StatsScreenState extends State<StatsScreen> {
-  List<Runs> allRuns = AllRunsData.allRuns;
+  List<Runs> allRuns = FirestoreService.allRuns;
 
   @override
   Widget build(BuildContext context) {

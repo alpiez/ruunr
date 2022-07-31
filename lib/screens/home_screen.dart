@@ -3,12 +3,13 @@ import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/main.dart';
 import 'package:ruunr/models/runs.dart';
 import 'package:ruunr/screens/runs_all_screen.dart';
+import 'package:ruunr/services/firestore_service.dart';
 import 'package:ruunr/widgets/monthly_mini_widget.dart';
 import 'package:ruunr/widgets/runs_data_listview.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = "/home";
-  List<Runs> allRuns = AllRunsData.allRuns;
+  List<Runs> allRuns = FirestoreService.allRuns;
   HomeScreen({Key? key}) : super(key: key);
 
   @override

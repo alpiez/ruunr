@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/models/laps.dart';
 import 'package:ruunr/models/runs.dart';
+import 'package:ruunr/services/firestore_service.dart';
 import 'package:ruunr/widgets/measurement_column.dart';
 
 class EditRunsScreen extends StatefulWidget {
@@ -26,7 +28,7 @@ class _EditRunsScreenState extends State<EditRunsScreen> {
   int hours = 0;
   int minutes = 0;
   int seconds = 0;
-  List<Runs> allRuns = AllRunsData.allRuns.reversed.toList();
+  List<Runs> allRuns = FirestoreService.allRuns;
 
   @override
   void initState() {
@@ -41,6 +43,9 @@ class _EditRunsScreenState extends State<EditRunsScreen> {
     Runs run = allRuns[index];
     List<Laps> laps = run.laps;
     List<Laps> lapsReversed = laps.reversed.toList();
+    String docRef() => DateFormat("dd-MM-y").add_Hm().format(run.dateTime);
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+
     if (meterPerLap == 0 && totalKm == 0 && date == DateTime(0) && note.isEmpty) {
       // Condition set here to prevent setState reassigning below's variables due 
       // to nature of setState refreshing build() to update state. 
@@ -88,7 +93,7 @@ class _EditRunsScreenState extends State<EditRunsScreen> {
       if (isValid) {
         editFormKey.currentState!.save();
         // AllRunsData.allRuns[indexToBeReplaced] = (Runs(location: loc, dateTime: date, distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps));
-        Provider.of<AllRunsData>(context, listen: false).edit(Runs(location: loc, dateTime: date, distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps), indexToBeReplaced);
+        FirestoreService().updateRun(run.dateTime, Runs(location: loc, dateTime: date, distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps));
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Run edited!")));
       }

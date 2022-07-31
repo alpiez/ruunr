@@ -13,9 +13,9 @@ class RunDataListview extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (ctx, i) {
-        return MiniRunDataWidget(allRuns.reversed.toList(), i); //just change back to "allRuns" if don't want reverse list.
+        return MiniRunDataWidget(allRuns.toList(), i); //just change back to "allRuns" if don't want reverse list.
       },
-      itemCount: (listsLimit == -1) ? allRuns.length : listsLimit ,
+      itemCount: (listsLimit == -1) ? allRuns.length : listsLimit>=allRuns.length ? allRuns.length : listsLimit ,
       separatorBuilder: (ctx, i) {
         return const Divider(height: 3, color: Color(0xff343A40), thickness: 1.5,);
       },

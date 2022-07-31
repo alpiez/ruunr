@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +8,7 @@ import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/models/laps.dart';
 import 'package:ruunr/models/runs.dart';
 import 'package:ruunr/screens/runs_edit_screen.dart';
+import 'package:ruunr/services/firestore_service.dart';
 import 'package:ruunr/widgets/measurement_column.dart';
 
 class RunDataDetailScreen extends StatelessWidget {
@@ -16,10 +19,8 @@ class RunDataDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int index = ModalRoute.of(context)!.settings.arguments as int;
-    Runs runs = AllRunsData.allRuns.reversed.toList()[index];
+    Runs runs = FirestoreService.allRuns[index];
     List<Laps> lapsReversed = runs.laps.reversed.toList();
-    int indexToBeReplaced = AllRunsData.allRuns.indexWhere((element) => element.dateTime == runs.dateTime);
-
 
     String calculatePace(Duration duration, double distance) {
       double paceSeconds = duration.inSeconds.toDouble() / (distance / 1000);
@@ -33,10 +34,10 @@ class RunDataDetailScreen extends StatelessWidget {
         context: context, 
         builder: (context) {
           return AlertDialog(
-            backgroundColor: Color(0xff343A40),
+            backgroundColor: const Color(0xff343A40),
             title: const Text("Confirm Delete?"),
             actions: [
-              TextButton(onPressed: () {Provider.of<AllRunsData>(context, listen: false).delete(indexToBeReplaced); Navigator.of(context).pushNamedAndRemoveUntil('/main', (route) => false);}, child: const Text("Yes")),
+              TextButton(onPressed: () {FirestoreService().deleteRun(runs.dateTime); Navigator.of(context).pushNamedAndRemoveUntil('/main', (route) => false);}, child: const Text("Yes")),
               TextButton(onPressed: () {Navigator.of(context).pop();}, child: const Text("No"))
             ],
           );
@@ -56,10 +57,10 @@ class RunDataDetailScreen extends StatelessWidget {
         // actions: [ IconButton(onPressed: (){ Navigator.pushNamed(context, EditRunsScreen.routeName, arguments: index);}, icon: Icon(Icons.more_horiz), iconSize: 36, splashRadius: 24)],
         actions: [
           PopupMenuButton(
-            color: Color(0xff343A40),
+            color: const Color(0xff343A40),
             itemBuilder: (context) => [
-              PopupMenuItem(child: Text("Edit"), value: 0),
-              PopupMenuItem(child: Text("Delete"), value: 1)
+              const PopupMenuItem(child: Text("Edit"), value: 0),
+              const PopupMenuItem(child: Text("Delete"), value: 1)
             ],
             onSelected: (result){
               switch (result) {
@@ -85,14 +86,14 @@ class RunDataDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 50),
           const Text("Analysis", style: TextStyle(fontSize: 36, fontWeight: FontWeight.w600)),
-          Consumer<AllRunsData>( //This is from Provider
+          Consumer<FirestoreService>( //This is from Provider
             builder: ((context, run, child) => 
               Wrap(
                 spacing: 30,
                 runSpacing: 30,
                 children: [
-                  MeasurementColumn("Total km", (run.getDistance(indexToBeReplaced, false) / 1000).toString(), "km"),
-                  MeasurementColumn("Avg Pace", calculatePace(run.getDuration(indexToBeReplaced, false), run.getDistance(indexToBeReplaced, false)), "min/km"),
+                  MeasurementColumn("Total km", (run.getDistance(index, false) / 1000).toString(), "km"),
+                  MeasurementColumn("Avg Pace", calculatePace(run.getDuration(index, false), run.getDistance(index, false)), "min/km"),
                   // MeasurementColumn("Calories", "208", "kcal"),
                 ],
               )

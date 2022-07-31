@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/models/runs.dart';
+import 'package:ruunr/services/firestore_service.dart';
 import 'package:ruunr/widgets/measurement_column.dart';
 import 'package:ruunr/widgets/runs_data_listview.dart';
 
@@ -12,7 +13,7 @@ class MonthlyRunDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();
-    List<Runs> runsMonth = AllRunsData().getMonthlyDistance(today);
+    List<Runs> runsMonth = FirestoreService().getMonthlyDistance(today);
 
     double totalKmMonth() {
       double km = 0;
