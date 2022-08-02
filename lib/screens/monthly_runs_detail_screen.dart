@@ -32,6 +32,9 @@ class MonthlyRunDetailScreen extends StatelessWidget {
     }
 
     String calculatePace(Duration duration, double distance) {
+      if (duration.inSeconds == 0) {
+        return "-";
+      }
       double paceSeconds = duration.inSeconds.toDouble() / distance;
       int min = (paceSeconds / 60).floor();
       int sec = (paceSeconds % 60).round();
@@ -42,9 +45,6 @@ class MonthlyRunDetailScreen extends StatelessWidget {
     }
 
     String stringFormat(double n) {
-      if ("$n".length == 5) {
-        return n.toStringAsFixed(0);
-      }
       return n.toStringAsFixed(1);
     }
     
@@ -58,7 +58,7 @@ class MonthlyRunDetailScreen extends StatelessWidget {
             spacing: 30,
             runSpacing: 30,
             children: [
-              MeasurementColumn("Total km", stringFormat(totalKmMonth()), "km"),
+              MeasurementColumn("Total km", (totalKmMonth()).toString(), "km"),
               MeasurementColumn("Avg Pace", calculatePace(totalDurationMonth(), totalKmMonth()), "min/km")
               // MeasurementColumn("Calories", "208", "kcal"),
             ],

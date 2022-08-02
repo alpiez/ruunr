@@ -59,7 +59,7 @@ class MiniRunDataWidget extends StatelessWidget {
                         width: 60, height: 24,
                         child: FittedBox(
                           fit: BoxFit.none,
-                          child:  Consumer<AllRunsData>(builder: ((context, run, child) => Text(calculatePace(run.getDuration(i, true), run.getDistance(i, true)).toString(), style: TextStyle(color: Color(0xffF8F9FA), fontSize: 24, fontWeight: FontWeight.bold, height: 1))))
+                          child:  Consumer<FirestoreService>(builder: ((context, run, child) => Text(calculatePace(run.getDuration(i, true), run.getDistance(i, true)).toString(), style: TextStyle(color: Color(0xffF8F9FA), fontSize: 24, fontWeight: FontWeight.bold, height: 1))))
                         )
                       ),
                       const SizedBox(width: 3 ), //spacing

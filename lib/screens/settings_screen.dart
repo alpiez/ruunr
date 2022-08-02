@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ruunr/screens/signin_screen.dart';
+import 'package:ruunr/services/firestore_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   static String routeName = "/settings";

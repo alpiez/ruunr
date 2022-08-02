@@ -23,11 +23,18 @@ class RunDataDetailScreen extends StatelessWidget {
     List<Laps> lapsReversed = runs.laps.reversed.toList();
 
     String calculatePace(Duration duration, double distance) {
+      if (duration.inSeconds == 0) {
+        return "-";
+      }
       double paceSeconds = duration.inSeconds.toDouble() / (distance / 1000);
       int min = (paceSeconds / 60).floor();
       int sec = (paceSeconds % 60).round();
       return "$min:${sec.toString().padLeft(2, "0")}";
     }
+
+    // clearThisRunData() {
+    //   runs = Runs(location: "", dateTime: DateTime.now(), duration: Duration.zero, distance: 0, laps: [], meterPerLap: 0, note: "");
+    // }
 
     confirmDelete() {
       showDialog(

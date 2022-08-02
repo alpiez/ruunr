@@ -28,7 +28,7 @@ class _SaveStopwatchScreenState extends State<SaveStopwatchScreen> {
   int hours = 0;
   int minutes = 0;
   int seconds = 0;
-  List<Runs> runs = AllRunsData.allRuns;
+  List<Runs> runs = FirestoreService.allRuns;
 
   @override
   Widget build(BuildContext context) {
@@ -74,15 +74,6 @@ class _SaveStopwatchScreenState extends State<SaveStopwatchScreen> {
         String uid = FirebaseAuth.instance.currentUser!.uid;
         DateTime now = DateTime.now();
         runs.add(Runs(location: loc, dateTime: DateTime.now(), distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps));
-        // FirebaseFirestore.instance.collection("users").doc(uid).collection("runs").doc(DateFormat("dd-MM-y").add_Hm().format(now)).set({
-        //   "location": loc, 
-        //   "dateTime": DateFormat("d/M/y").add_Hm().format(now), 
-        //   "distance": totalMeter, 
-        //   "duration": Duration(hours: hours, minutes: minutes, seconds: seconds).inSeconds, 
-        //   "meterPerLap": meterPerLap, 
-        //   "note": note, 
-        //   "laps": Laps.encode(laps)
-        // });
         FirestoreService().addRun(Runs(location: loc, dateTime: DateTime.now(), distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps));
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Run saved successfully!")));

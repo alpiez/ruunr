@@ -13,25 +13,34 @@ class MiniMonthlyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();
-    List<Runs> runsMonth = FirestoreService().getMonthlyDistance(today);
+    // List<Runs> runsMonth = FirestoreService().getMonthlyDistance(today); //Replaced to just use Consumer<FirestoreService>. Cuz the list is already provided.
 
-    double totalKmMonth() {
+    double totalKmMonth(List<Runs> runsMonth) {
       double km = 0;
+      if (runsMonth.isEmpty){
+        return 0;
+      }
       for (var i in runsMonth) {
         km += i.distance;
       }
       return km/1000; 
     }
 
-    Duration totalDurationMonth() {
+    Duration totalDurationMonth(List<Runs> runsMonth) {
       Duration time = Duration.zero;
+      if (runsMonth.isEmpty){
+        return Duration.zero;
+      }
       for (var i in runsMonth) {
         time += i.duration;
       }
       return time;
     }
 
-    String calculatePace(Duration duration, double distance) {
+    String calculatePace(Duration duration, double distance, List<Runs> runsMonth) {
+      if (runsMonth.isEmpty){
+        return "-";
+      }
       double paceSeconds = duration.inSeconds.toDouble() / distance;
       int min = (paceSeconds / 60).floor();
       int sec = (paceSeconds % 60).round();
@@ -42,7 +51,7 @@ class MiniMonthlyWidget extends StatelessWidget {
     }
 
     String stringFormat(double n) {
-      if ("$n".length == 5) {
+      if ("$n".length == 6) {
         return n.toStringAsFixed(0);
       }
       return n.toStringAsFixed(1);
@@ -64,16 +73,17 @@ class MiniMonthlyWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("This Month:", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: Color(0xff6C757D))),
-              Consumer<AllRunsData>(
-                builder: ((context, run, child) =>
-                  Row(
+              Consumer<FirestoreService>(
+                builder: ((context, run, child) {
+                  List<Runs> runsMonth = run.getMonthlyDistance(today);
+                  return Row(
                     children: [
-                      MeasurementColumn("Total km", stringFormat(totalKmMonth()), "km"),
-                      const SizedBox(width: 30),
-                      MeasurementColumn("Avg Pace", calculatePace(totalDurationMonth(), totalKmMonth()), "min/km"),
+                      SizedBox(width: 100, child: FittedBox(fit: BoxFit.none, child: MeasurementColumn("Total km", (runsMonth.isEmpty) ? "-" : stringFormat(totalKmMonth(runsMonth)), "km"))),
+                      const SizedBox(width: 40),
+                      SizedBox(width: 150, child: FittedBox(fit: BoxFit.none, child: MeasurementColumn("Avg Pace", (runsMonth.isEmpty) ? "-" : calculatePace(totalDurationMonth(runsMonth), totalKmMonth(runsMonth), runsMonth), "min/km"))),
                     ],
-                  )
-                )
+                  );
+                })
               )
             ],
           ),

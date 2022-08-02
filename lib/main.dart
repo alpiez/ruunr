@@ -37,72 +37,63 @@ class MyApp extends StatelessWidget {
           isLoggedIn = false;
         } else {
           isLoggedIn = true;
-          // FirestoreService().getRuns(FirebaseAuth.instance.currentUser!.uid);
         }
       });
     }
 
     return FutureBuilder(
       future: initializeFirebase(),
-      builder: (context, snapshot) => StreamBuilder<List<Runs>>(
-        stream: FirestoreService().getRuns(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(),);
-          } else {
-            return MultiProvider(
-              providers: [
-                ChangeNotifierProvider<AllRunsData>(create: (context) { return AllRunsData(); } ),
-                ChangeNotifierProvider<FirestoreService>(create: (context) { return FirestoreService(); } ),
-              ],
-              child: MaterialApp(
-                title: 'Flutter Demo',
-                theme: ThemeData(
-                  primarySwatch: const MaterialColor(0xff343A40, <int, Color>{
-                    50: Color(0xffF8F9FA),
-                    100: Color(0xffE9ECEF),
-                    200: Color(0xffDEE2E6),
-                    300: Color(0xffCED4DA),
-                    400: Color(0xffADB5BD),
-                    500: Color(0xff6C757D),
-                    600: Color(0xff343A40),
-                    700: Color(0xff212529)
-                  }),
-                  fontFamily: "Poppins",
-                  scaffoldBackgroundColor: const Color(0xff212529),
-                  colorScheme: const ColorScheme.dark(primary: Color(0xffF8F9FA), secondary: Color(0xffE9ECEF)), //Set text to white
-                  appBarTheme: const AppBarTheme(backgroundColor: Color(0xff212529), elevation: 0, toolbarHeight: 80, titleTextStyle: TextStyle(fontSize: 48, fontWeight: FontWeight.w700, fontFamily: "Poppins", color: Color(0xff6C757D))) //set appbar color and remove shadow (elevation)
-                ),
-                // home: MainScreen(),
-                home: isLoggedIn ? MainScreen() : SignInScreen(),
-                routes: {
-                  SignInScreen.routeName: (context) => SignInScreen(),
-                  SignUpScreen.routeName: (context) => SignUpScreen(),
-                  LogInScreen.routeName: (context) => LogInScreen(),
-                  
-                  SaveStopwatchScreen.routeName: (context) => SaveStopwatchScreen(),
-                  RunDataDetailScreen.routeName: (context) => RunDataDetailScreen(),
-                  MonthlyRunDetailScreen.routeName: (context) => MonthlyRunDetailScreen(),
-                  EditRunsScreen.routeName: (context) => EditRunsScreen(),
-                  RunsScreen.routeName: (context) => RunsScreen(),
-                  MainScreen.routeName: (context) => MainScreen(),
-            
-                  // HomeScreen.routeName: (context) => HomeScreen(),
-                  // StopwatchScreen.routeName: (context) => StopwatchScreen(),
-                  // StatsScreen.routeName: (context) => StatsScreen(),
-                  // SettingsScreen.routeName: (context) => SettingsScreen(),
-                },
-              ),
-            );
-          }
-        }
-      ),
+      builder: (context, snapshot) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider<AllRunsData>(create: (context) { return AllRunsData(); } ),
+            ChangeNotifierProvider<FirestoreService>(create: (context) { return FirestoreService(); } ),
+          ],
+          child: MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: const MaterialColor(0xff343A40, <int, Color>{
+                50: Color(0xffF8F9FA),
+                100: Color(0xffE9ECEF),
+                200: Color(0xffDEE2E6),
+                300: Color(0xffCED4DA),
+                400: Color(0xffADB5BD),
+                500: Color(0xff6C757D),
+                600: Color(0xff343A40),
+                700: Color(0xff212529)
+              }),
+              fontFamily: "Poppins",
+              scaffoldBackgroundColor: const Color(0xff212529),
+              colorScheme: const ColorScheme.dark(primary: Color(0xffF8F9FA), secondary: Color(0xffE9ECEF)), //Set text to white
+              appBarTheme: const AppBarTheme(backgroundColor: Color(0xff212529), elevation: 0, toolbarHeight: 80, titleTextStyle: TextStyle(fontSize: 48, fontWeight: FontWeight.w700, fontFamily: "Poppins", color: Color(0xff6C757D))) //set appbar color and remove shadow (elevation)
+            ),
+            home: !isLoggedIn ? SignInScreen() : MainScreen(),
+            routes: {
+              SignInScreen.routeName: (context) => SignInScreen(),
+              SignUpScreen.routeName: (context) => SignUpScreen(),
+              LogInScreen.routeName: (context) => LogInScreen(),
+              
+              SaveStopwatchScreen.routeName: (context) => SaveStopwatchScreen(),
+              RunDataDetailScreen.routeName: (context) => RunDataDetailScreen(),
+              MonthlyRunDetailScreen.routeName: (context) => MonthlyRunDetailScreen(),
+              EditRunsScreen.routeName: (context) => EditRunsScreen(),
+              RunsScreen.routeName: (context) => RunsScreen(),
+              MainScreen.routeName: (context) => MainScreen(),
+        
+              // HomeScreen.routeName: (context) => HomeScreen(),
+              // StopwatchScreen.routeName: (context) => StopwatchScreen(),
+              // StatsScreen.routeName: (context) => StatsScreen(),
+              // SettingsScreen.routeName: (context) => SettingsScreen(),
+            },
+          ),
+        );
+      }
     );
   }
 }
 
 class MainScreen extends StatefulWidget {
-  static String routeName = "/main";
+  static String routeName = "/main";  
   MainScreen({Key? key}) : super(key: key);
 
   @override
@@ -110,8 +101,16 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late Stream<List<Runs>> runStream;
   int selectedIndex = 0;  
 
+  @override
+  void initState() {
+    super.initState();
+
+    runStream = FirestoreService().getRuns();
+  }
+  
   changePage(int i) {
     switch (i) {
       case 0:
@@ -127,9 +126,17 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body: changePage(selectedIndex),
+      body: StreamBuilder<List<Runs>>(
+        stream: runStream, //magic by https://youtu.be/g8Y1Eqa4pbc
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return changePage(selectedIndex);
+          }
+        }
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const [

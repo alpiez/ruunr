@@ -7,7 +7,7 @@ import 'package:ruunr/models/runs.dart';
 
 class FirestoreService extends ChangeNotifier{
   static List<Runs> allRuns = [];
-  static String uid = FirebaseAuth.instance.currentUser!.uid;
+  String uid = FirebaseAuth.instance.currentUser!.uid;
 
   Stream<List<Runs>> getRuns() {
     return FirebaseFirestore.instance.collection("users").doc(uid).collection("runs").orderBy("dateTime", descending: true).snapshots().map((value) {
@@ -37,9 +37,9 @@ class FirestoreService extends ChangeNotifier{
   
   addRun(Runs run) {
     DateTime now = DateTime.now();
-    FirebaseFirestore.instance.collection("users").doc(uid).collection("runs").doc(DateFormat("dd-MM-y").add_Hm().format(now)).set({
+    FirebaseFirestore.instance.collection("users").doc(uid).collection("runs").doc(DateFormat("y-MM-dd").add_Hm().format(now)).set({
       "location": run.location, 
-      "dateTime": DateFormat("dd/MM/y").add_Hm().format(now), 
+      "dateTime": DateFormat("y/MM/dd").add_Hm().format(now), 
       "distance": run.distance, 
       "duration": run.duration.inSeconds, 
       "meterPerLap": run.meterPerLap, 
@@ -49,10 +49,10 @@ class FirestoreService extends ChangeNotifier{
   }
 
   updateRun(DateTime dateTime, Runs run) {
-    String docRef() => DateFormat("dd-MM-y").add_Hm().format(dateTime);
+    String docRef() => DateFormat("y-MM-dd").add_Hm().format(dateTime);
     FirebaseFirestore.instance.collection("users/"+uid+"/runs").doc(docRef()).update({
       "location": run.location, 
-      "dateTime": DateFormat("dd/MM/y").add_Hm().format(dateTime), 
+      "dateTime": DateFormat("y/MM/dd").add_Hm().format(dateTime), 
       "distance": run.distance, 
       "duration": run.duration.inSeconds, 
       "meterPerLap": run.meterPerLap, 
@@ -61,8 +61,13 @@ class FirestoreService extends ChangeNotifier{
     });
   }
 
+  void edit(Runs run, int i){
+    allRuns[i] = run;
+    notifyListeners();
+  }
+
   deleteRun(DateTime dateTime) {
-    String docRef() => DateFormat("dd-MM-y").add_Hm().format(dateTime);
+    String docRef() => DateFormat("y-MM-dd").add_Hm().format(dateTime);
     FirebaseFirestore.instance.collection("users/"+uid+"/runs").doc(docRef()).delete();
   }
 
@@ -72,9 +77,9 @@ class FirestoreService extends ChangeNotifier{
     int year;
     int hour;
     int minute;
-    day = int.parse(dateTime[0]+dateTime[1]);
-    month = int.parse(dateTime[3]+dateTime[4]);
-    year = int.parse(dateTime[6]+dateTime[7]+dateTime[8]+dateTime[9]);
+    year = int.parse(dateTime[0]+dateTime[1]+dateTime[2]+dateTime[3]);
+    month = int.parse(dateTime[5]+dateTime[6]);
+    day = int.parse(dateTime[8]+dateTime[9]);
     hour = int.parse(dateTime[11]+dateTime[12]);
     minute = int.parse(dateTime[14]+dateTime[15]);
     return DateTime(year, month, day, hour, minute);
@@ -85,6 +90,9 @@ class FirestoreService extends ChangeNotifier{
   }
 
   double getDistance(int i, bool reversed) {
+    if (allRuns.isEmpty) {
+      return 0;
+    }
     if (reversed == true) {
       return allRuns.toList()[i].distance;
     }
@@ -102,6 +110,9 @@ class FirestoreService extends ChangeNotifier{
   }
 
   Duration getDuration(int i, bool reversed) {
+    if (allRuns.isEmpty) {
+      return Duration.zero;
+    }
     if (reversed == true) {
       return allRuns.toList()[i].duration;
     }

@@ -43,8 +43,6 @@ class _EditRunsScreenState extends State<EditRunsScreen> {
     Runs run = allRuns[index];
     List<Laps> laps = run.laps;
     List<Laps> lapsReversed = laps.reversed.toList();
-    String docRef() => DateFormat("dd-MM-y").add_Hm().format(run.dateTime);
-    String uid = FirebaseAuth.instance.currentUser!.uid;
 
     if (meterPerLap == 0 && totalKm == 0 && date == DateTime(0) && note.isEmpty) {
       // Condition set here to prevent setState reassigning below's variables due 
@@ -54,7 +52,6 @@ class _EditRunsScreenState extends State<EditRunsScreen> {
       date = run.dateTime;
       note = run.note;
     }
-    int indexToBeReplaced = AllRunsData.allRuns.indexWhere((element) => element.dateTime == date);
 
     void getHoursMinutesSeconds(int totalSeconds) {
       seconds = (totalSeconds % 60);
@@ -92,7 +89,7 @@ class _EditRunsScreenState extends State<EditRunsScreen> {
 
       if (isValid) {
         editFormKey.currentState!.save();
-        // AllRunsData.allRuns[indexToBeReplaced] = (Runs(location: loc, dateTime: date, distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps));
+        Provider.of<FirestoreService>(context, listen: false).edit(Runs(location: loc, dateTime: date, distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps), index);
         FirestoreService().updateRun(run.dateTime, Runs(location: loc, dateTime: date, distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps));
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Run edited!")));
