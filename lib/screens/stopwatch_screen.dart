@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/models/laps.dart';
+import 'package:ruunr/screens/map_tracking_screen.dart';
 import 'package:ruunr/screens/stopwatch_save_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -206,7 +207,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
               children: [
                 ElevatedButton(
                   onPressed: () { (!started) ? resetTimer() : lapRun(); },
-                  child: Container(child: Text((!started) ? "Reset" : "Lap", style: const TextStyle(color: Color(0xffDEE2E6), fontWeight: FontWeight.w500, fontSize: 18)), width: 60, height: 60, alignment: Alignment.center),
+                  child: Container(child: Text((!started) ? "Reset" : "Lap", style: const TextStyle(color: Color(0xffDEE2E6), fontWeight: FontWeight.w500, fontSize: 14)), width: 60, height: 60, alignment: Alignment.center),
                   style: ElevatedButton.styleFrom(
                     primary: const Color(0xff212529),
                     shape: RoundedRectangleBorder(
@@ -230,7 +231,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                 ),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 100),
-                  child: (!started) ? (laps.isNotEmpty) ?
+                  child: /*(!started)*/ (started) ? (laps.isNotEmpty) ? //TODO: Remembered to change back this line
                   ElevatedButton(
                     onPressed: () { Navigator.pushNamed(context, SaveStopwatchScreen.routeName, arguments: laps); savePrefs(); },
                     child: Container(child: const Text("Save", style: TextStyle(color: Color(0xffDEE2E6), fontWeight: FontWeight.w500, fontSize: 18)), width: 60, height: 60, alignment: Alignment.center),
@@ -243,7 +244,20 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                       padding: EdgeInsets.zero,
                       minimumSize: Size.zero
                     ), 
-                  ) : const SizedBox(width: 60) : const SizedBox(width: 60),
+                  ) : const SizedBox(width: 60) : 
+                  ElevatedButton(
+                    onPressed: () { Navigator.pushNamed(context, MapTrackingScreen.routeName);},
+                    child: Container(child: const Icon(Icons.pin_drop, color: Color(0xffF8F9FA), size: 36), width: 60, height: 60, alignment: Alignment.center),
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color(0xff212529),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                        side: const BorderSide(width: 3, color: Color(0xffDEE2E6)),
+                      ),
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size.zero
+                    ), 
+                  ),
                 )
               ],
             ),

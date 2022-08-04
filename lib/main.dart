@@ -6,6 +6,7 @@ import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/models/runs.dart';
 import 'package:ruunr/ruunr_icons.dart';
 import 'package:ruunr/screens/home_screen.dart';
+import 'package:ruunr/screens/map_tracking_screen.dart';
 import 'package:ruunr/screens/monthly_runs_detail_screen.dart';
 import 'package:ruunr/screens/runs_data_detail_screen.dart';
 import 'package:ruunr/screens/runs_edit_screen.dart';
@@ -79,6 +80,8 @@ class MyApp extends StatelessWidget {
               EditRunsScreen.routeName: (context) => EditRunsScreen(),
               RunsScreen.routeName: (context) => RunsScreen(),
               MainScreen.routeName: (context) => MainScreen(),
+
+              MapTrackingScreen.routeName: (context) => MapTrackingScreen(),
         
               // HomeScreen.routeName: (context) => HomeScreen(),
               // StopwatchScreen.routeName: (context) => StopwatchScreen(),
