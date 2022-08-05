@@ -5,6 +5,7 @@ import 'package:ruunr/models/runs.dart';
 import 'package:ruunr/screens/runs_all_screen.dart';
 import 'package:ruunr/services/firestore_service.dart';
 import 'package:ruunr/widgets/measurement_column.dart';
+import 'package:ruunr/widgets/mini_chart_widget.dart';
 import 'package:ruunr/widgets/runs_data_listview.dart';
 
 class StatsScreen extends StatefulWidget {
@@ -44,15 +45,17 @@ class _StatsScreenState extends State<StatsScreen> {
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         children: [
           Container(
-            height: 240,
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+            height: 300,
             alignment: Alignment.center,
-            child: const Text("Chart here lol"),
-            decoration: const BoxDecoration(color: Color(0xff343A40)),
+            // decoration: const BoxDecoration(color: Color(0xff343A40)),
+            child: const MiniChartWidget(),
           ),
           const SizedBox(height: 20),
+          const Text("Lifetime Stats", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600)),
           Wrap(
-             spacing: 30,
-              runSpacing: 30,
+            spacing: 30,
+            runSpacing: 30,
             children: [
               MeasurementColumn("Total km", totalDistance().toStringAsFixed(1), "km", mainSize: 50),
               MeasurementColumn("Total duration", totalDuration().inHours.toString(), "hours", mainSize: 50),

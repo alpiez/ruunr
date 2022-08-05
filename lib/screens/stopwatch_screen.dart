@@ -231,7 +231,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                 ),
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 100),
-                  child: /*(!started)*/ (started) ? (laps.isNotEmpty) ? //TODO: Remembered to change back this line
+                  child: (!started) ? (laps.isNotEmpty) ? 
                   ElevatedButton(
                     onPressed: () { Navigator.pushNamed(context, SaveStopwatchScreen.routeName, arguments: laps); savePrefs(); },
                     child: Container(child: const Text("Save", style: TextStyle(color: Color(0xffDEE2E6), fontWeight: FontWeight.w500, fontSize: 18)), width: 60, height: 60, alignment: Alignment.center),
