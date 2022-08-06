@@ -31,18 +31,11 @@ class _EditRunsScreenState extends State<EditRunsScreen> {
   List<Runs> allRuns = FirestoreService.allRuns;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    
-  }
-
-  @override
   Widget build(BuildContext context) {
     int index = ModalRoute.of(context)!.settings.arguments as int;
     Runs run = allRuns[index];
     List<Laps> laps = run.laps;
-    List<Laps> lapsReversed = laps.reversed.toList();
+    List<Laps> lapsReversed = laps.reversed.toList(); //Sort from the last laps to first.
 
     if (meterPerLap == 0 && totalKm == 0 && date == DateTime(0) && note.isEmpty) {
       // Condition set here to prevent setState reassigning below's variables due 
@@ -88,6 +81,7 @@ class _EditRunsScreenState extends State<EditRunsScreen> {
       bool isValid = editFormKey.currentState!.validate();
 
       if (isValid) {
+        // Update allRuns with Provider, as well as Firestore
         editFormKey.currentState!.save();
         Provider.of<FirestoreService>(context, listen: false).edit(Runs(location: loc, dateTime: date, distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps), index);
         FirestoreService().updateRun(run.dateTime, Runs(location: loc, dateTime: date, distance: totalMeter, duration: Duration(hours: hours, minutes: minutes, seconds: seconds), meterPerLap: meterPerLap, note: note, laps: laps));

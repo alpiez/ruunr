@@ -85,6 +85,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         setState(() { isLoading = false; });
         Navigator.pushNamedAndRemoveUntil(context, MainScreen.routeName, (route) => false);
       } on FirebaseAuthException catch (e) {
+        // Get Firebase's error and display them to user
         if (e.code == "weak-password") {
           setState(() { errorPw = "Weak Password!"; });
         } else if (e.code == "email-already-in-use") {

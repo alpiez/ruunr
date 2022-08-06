@@ -70,6 +70,8 @@ class _SaveStopwatchScreenState extends State<SaveStopwatchScreen> {
       bool isValid = formKey.currentState!.validate();
 
       if (isValid) {
+        // add Run to provider allRuns (May not be required since StreamBuilder
+        // actually refresh the allRuns) and add new run to Firestore.
         formKey.currentState!.save();
         String uid = FirebaseAuth.instance.currentUser!.uid;
         DateTime now = DateTime.now();

@@ -71,6 +71,8 @@ class MyApp extends StatelessWidget {
               colorScheme: const ColorScheme.dark(primary: Color(0xffF8F9FA), secondary: Color(0xffE9ECEF)), //Set text to white
               appBarTheme: const AppBarTheme(backgroundColor: Color(0xff212529), elevation: 0, toolbarHeight: 80, titleTextStyle: TextStyle(fontSize: 48, fontWeight: FontWeight.w700, fontFamily: "Poppins", color: Color(0xff6C757D))) //set appbar color and remove shadow (elevation)
             ),
+            // After loaded, check auth states. If logged in, go to MainScreen,
+            // otherwise go to SignInScreen.
             home: !isLoggedIn ? SignInScreen() : MainScreen(),
             routes: {
               SignInScreen.routeName: (context) => SignInScreen(),
@@ -84,12 +86,7 @@ class MyApp extends StatelessWidget {
               RunsScreen.routeName: (context) => RunsScreen(),
               MainScreen.routeName: (context) => MainScreen(),
 
-              MapTrackingScreen.routeName: (context) => MapTrackingScreen(),
-        
-              // HomeScreen.routeName: (context) => HomeScreen(),
-              // StopwatchScreen.routeName: (context) => StopwatchScreen(),
-              // StatsScreen.routeName: (context) => StatsScreen(),
-              // SettingsScreen.routeName: (context) => SettingsScreen(),
+              MapTrackingScreen.routeName: (context) => MapTrackingScreen(),        
             },
           ),
         );
@@ -113,7 +110,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-
     runStream = FirestoreService().getRuns();
   }
   
@@ -134,7 +130,11 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<List<Runs>>(
-        stream: runStream, //magic by https://youtu.be/g8Y1Eqa4pbc
+        // runStream get assigned with getRuns() in the initState() rather than 
+        // directly inputting here. This is to prevent widgets being constantly
+        // refresh whenever user interacts. 
+        // Thanks to this video for solution: https://youtu.be/g8Y1Eqa4pbc
+        stream: runStream, 
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -164,120 +164,6 @@ class _MainScreenState extends State<MainScreen> {
             selectedIndex = i;
           });
         },
-      ),
-    );
-  }
-}
-
-class NaviBar extends StatelessWidget {
-  const NaviBar({ Key? key }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    int selectedIndex = 0;
-
-    return BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(RuunrIcon.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(RuunrIcon.clock), label: "Stopwatch"),
-          BottomNavigationBarItem(icon: Icon(RuunrIcon.stats), label: "Stats"),
-          BottomNavigationBarItem(icon: Icon(RuunrIcon.gear), label: "Settings"),
-        ],
-        selectedItemColor: const Color(0xffE9ECEF),
-        unselectedItemColor: const Color(0xff6C757D),
-        selectedFontSize: 0, //This is label's font size
-        showUnselectedLabels: false,
-        showSelectedLabels: false,
-        backgroundColor: const Color(0xff212529),
-        elevation: 0,
-        currentIndex: selectedIndex,
-        onTap: (i) {
-          switch (i) {
-            case 0:
-              Navigator.pushReplacementNamed(context, HomeScreen.routeName);
-              break;
-            case 1:
-              Navigator.pushReplacementNamed(context, StopwatchScreen.routeName);
-              break;
-            case 2:
-              Navigator.pushReplacementNamed(context, StatsScreen.routeName);
-              break;
-            case 3:
-              Navigator.pushReplacementNamed(context, SettingsScreen.routeName);
-              break;
-          }
-        },
-      );
-  }
-}
-
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

@@ -17,6 +17,7 @@ class _MapTrackingScreenState extends State<MapTrackingScreen> {
   List<LatLng> route = [];
   bool started = false;
 
+  // Get the controller after map loaded
   _onMapCreated(GoogleMapController controller) {
     mapController = controller;
 
@@ -64,6 +65,7 @@ class _MapTrackingScreenState extends State<MapTrackingScreen> {
     return currentLocation!;
   }
   
+  // Move the camera to user's location
   _animateToUserLoc() async {
     Position pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     // print(pos.latitude);

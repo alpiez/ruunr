@@ -38,6 +38,8 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     loadSharedPref();
   }
 
+  // Load the previous timer if user hasn't reset.
+  // Utilizes SharedPreferences package
   Future<void> loadSharedPref() async {
     prefs = await SharedPreferences.getInstance();
 

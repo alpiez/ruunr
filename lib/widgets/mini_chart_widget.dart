@@ -22,6 +22,7 @@ class _MiniChartWidgetState extends State<MiniChartWidget> {
     );
   }
 
+  // Collect every from allRuns and sort them into month with current year.
   double getTotalDistance(int index) {
     DateTime now = DateTime.now();
     double jan = 0;

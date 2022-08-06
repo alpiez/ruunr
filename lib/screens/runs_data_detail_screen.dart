@@ -32,10 +32,6 @@ class RunDataDetailScreen extends StatelessWidget {
       return "$min:${sec.toString().padLeft(2, "0")}";
     }
 
-    // clearThisRunData() {
-    //   runs = Runs(location: "", dateTime: DateTime.now(), duration: Duration.zero, distance: 0, laps: [], meterPerLap: 0, note: "");
-    // }
-
     confirmDelete() {
       showDialog(
         context: context, 
