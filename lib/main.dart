@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:ruunr/all_runs.dart';
 import 'package:ruunr/models/runs.dart';
@@ -19,6 +20,7 @@ import 'package:ruunr/screens/stopwatch_screen.dart';
 import 'package:ruunr/services/firestore_service.dart';
 
 Future<void> main() async {
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -51,6 +53,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider<FirestoreService>(create: (context) { return FirestoreService(); } ),
           ],
           child: MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: ThemeData(
               primarySwatch: const MaterialColor(0xff343A40, <int, Color>{

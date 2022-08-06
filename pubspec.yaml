@@ -43,6 +43,8 @@ dependencies:
   google_maps_flutter: ^2.1.10
   geolocator: ^9.0.1
   fl_chart: ^0.55.1
+  flutter_launcher_icons: ^0.9.3
+  flutter_native_splash: ^2.1.6
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +56,17 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/ruunricon.png"
+  adaptive_icon_background: "#212529"
+  adaptive_icon_foreground: "assets/images/ruunricon.png"
+
+flutter_native_splash:
+  color: "#212529"
+  image: assets/images/ruunrsplash.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -70,6 +83,7 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/logo_text.png
+    - assets/images/ruunricon.png
 
   # assets:
   #   - images/a_dot_burr.jpeg

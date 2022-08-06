@@ -88,7 +88,7 @@ class RunDataDetailScreen extends StatelessWidget {
           Container(
             height: 240,
             alignment: Alignment.center,
-            child: const Text("Map here lol"),
+            child: const Text("Map insert here"),
             decoration: const BoxDecoration(color: Color(0xff343A40)),
           ),
           const SizedBox(height: 50),
